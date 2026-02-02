@@ -38,9 +38,7 @@ def download_and_extract():
     
     print("All archives are ready!")
 
-
-# Uncomment for initial dataset download:
-# download_and_extract()
+download_and_extract()
 
 def save_by_fold_with_clear_names(start_path, dataset_name):
     """
@@ -92,3 +90,33 @@ def save_by_fold_with_clear_names(start_path, dataset_name):
         print(f"{filename}: {fold_df.shape[0]:,} rows")
     
     return fold_dirs
+
+def collect_mbd_data_by_fold_named():
+    """
+    Main processing function: Processes ALL MBD-mini datasets from data/ folder.
+    Calls save_by_fold_with_clear_names() for each dataset (detail_dialog, detail_geo, etc.).
+    Returns dictionary with fold directories for each dataset.
+    """
+    print("=== PROCESSING ALL DATASETS FROM data/ ===")
+    
+    # Define all MBD-mini datasets and their starting paths
+    datasets = {
+        'detail_dialog': 'data/detail/dialog',
+        'detail_geo': 'data/detail/geo', 
+        'detail_trx': 'data/detail/trx',
+        'clients': 'data/client_split',
+        'targets': 'data/targets'
+    }
+    
+    all_data = {}
+    for dataset_name, start_path in datasets.items():
+        if os.path.exists(start_path):
+            print(f"\n{'='*80}")
+            all_data[dataset_name] = save_by_fold_with_clear_names(start_path, dataset_name)
+        else:
+            print(f"Folder not found: {start_path}")
+    
+    return all_data
+
+all_data = collect_mbd_data_by_fold_named()
+print("ALL READY!")
